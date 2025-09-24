@@ -1,36 +1,438 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RuleCMS Widget Integration - Next.js Demo
 
-## Getting Started
+A comprehensive demonstration showing how to integrate **RuleCMS widgets** into any Next.js application. This project serves as both a working example and a tutorial for developers who want to add RuleCMS widgets to their own Next.js applications.
 
-First, run the development server:
+## 🚀 Live Demo
+
+**[View the live demo](#)** *(Deployment URL will be added after hosting)*
+
+Experience the RuleCMS widget integration in action with this deployed Next.js example.
+
+## What is RuleCMS?
+
+**RuleCMS** is a powerful visual content management system that lets you:
+
+- 🎨 **Build widgets visually** using a drag-and-drop composer interface
+- 📱 **Create responsive content** that works across all devices
+- 🚀 **Publish instantly** and get a unique published key for each widget
+- 🔗 **Integrate anywhere** with just a few lines of code
+
+Think of it as a visual page builder that generates widgets you can embed in any Next.js application.
+
+## How RuleCMS Widget Integration Works
+
+### The Complete Workflow
+
+1. **Design Phase** 🎨
+   - Log into your RuleCMS account at [rulecms.com](https://rulecms.com)
+   - Use the visual composer to create your widget
+   - Add text, images, buttons, forms, and interactive elements
+   - Preview your widget and make adjustments
+
+2. **Publish Phase** 📤
+   - Click "Publish" when your widget is ready
+   - RuleCMS generates a unique **Published Key** for your widget
+   - Copy this key - you'll need it for integration
+
+3. **Integration Phase** ⚡
+   - Install the `@rulecms/widget-react` package in your Next.js app
+   - Use the `RuleCMSWidget` component with your published key
+   - Your widget appears in your Next.js app with all functionality intact
+
+4. **Authentication** 🔐
+   - Generate an **App Token** from your RuleCMS project settings
+   - This token authorizes your Next.js app to fetch your published widgets
+
+## Adding RuleCMS Widgets to Your Own Next.js App
+
+Follow these steps to integrate RuleCMS widgets into any Next.js application:
+
+### Step 1: Install the Package
+
+Add the RuleCMS widget package to your Next.js project:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install @rulecms/widget-react
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Note**: If you encounter peer dependency warnings with newer React versions, use:
+```bash
+npm install @rulecms/widget-react --legacy-peer-deps
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Step 2: Set Up Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file in your project root:
+
+```env
+# Your RuleCMS App Token (required)
+NEXT_PUBLIC_RULECMS_TOKEN=your_app_token_here
+
+# RuleCMS API Endpoint (optional - defaults to https://rulecms.com)
+NEXT_PUBLIC_RULECMS_ENDPOINT=https://rulecms.com
+
+# Your widget's published key
+NEXT_PUBLIC_PUBLISHED_KEY=your_published_key_here
+```
+
+### Step 3: Create the Provider Component
+
+Create `src/app/providers.tsx` (or `components/providers.tsx`):
+
+```jsx
+'use client';
+
+import { ReactNode } from 'react';
+import { RuleCMSWidgetProvider } from '@rulecms/widget-react';
+
+interface RuleCMSProviderProps {
+  children: ReactNode;
+}
+
+export function RuleCMSProvider({ children }: RuleCMSProviderProps) {
+  const appToken = process.env.NEXT_PUBLIC_RULECMS_TOKEN;
+  const endpoint = process.env.NEXT_PUBLIC_RULECMS_ENDPOINT || "https://rulecms.com";
+
+  return (
+    <RuleCMSWidgetProvider token={appToken} endpoint={endpoint}>
+      {children}
+    </RuleCMSWidgetProvider>
+  );
+}
+```
+
+### Step 4: Update Your Root Layout
+
+Update `src/app/layout.tsx` to include the provider:
+
+```jsx
+import { RuleCMSProvider } from './providers';
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <RuleCMSProvider>
+          {children}
+        </RuleCMSProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### Step 5: Create a Widget Component
+
+Create `src/app/components/RuleCMSWidget.tsx`:
+
+```jsx
+'use client';
+
+import { RuleCMSWidget } from '@rulecms/widget-react';
+
+export function RuleCMSWidgetComponent() {
+  const publishedKey = process.env.NEXT_PUBLIC_PUBLISHED_KEY;
+
+  return (
+    <RuleCMSWidget publishedKey={publishedKey} />
+  );
+}
+```
+
+### Step 6: Use in Your Pages
+
+In any page or component:
+
+```jsx
+import { RuleCMSWidgetComponent } from './components/RuleCMSWidget';
+
+export default function HomePage() {
+  return (
+    <div>
+      <h1>My Next.js App</h1>
+      
+      {/* Your RuleCMS widget */}
+      <RuleCMSWidgetComponent />
+      
+      <p>More content...</p>
+    </div>
+  );
+}
+```
+
+### Step 7: Get Your Credentials
+
+#### Get Your App Token:
+1. Visit [rulecms.com](https://rulecms.com) and log into your account
+2. Navigate to your project settings
+3. Find "API Tokens" or "App Tokens" section
+4. Generate a new token with widget access permissions
+5. Copy the token and add it to your environment variables
+
+#### Get Your Published Key:
+1. In RuleCMS, create or edit a widget using the visual composer
+2. Design your widget with text, images, buttons, forms, etc.
+3. Click "Publish" when ready
+4. Copy the generated published key
+5. Use this key in your `RuleCMSWidget` component
+
+### Step 8: Test Your Integration
+
+Start your Next.js development server:
+```bash
+npm run dev
+```
+
+Your RuleCMS widget should now appear in your Next.js application with all its interactive features working!
+
+## Running This Demo Project
+
+To run this specific demo project:
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- A RuleCMS account (optional - demo works with placeholder values)
+
+### Installation
+
+```bash
+# Clone this repository
+git clone <repository-url>
+cd use_rulecms_nextjs
+
+# Install dependencies
+npm install
+
+# Copy environment template
+cp .env.example .env.local
+
+# Edit .env.local with your actual tokens (optional for demo)
+# Start the development server
+npm run dev
+```
+
+The demo will open at `http://localhost:3000`
+
+## Understanding the Integration Components
+
+### Required Components
+
+The `@rulecms/widget-react` package provides two essential components:
+
+#### 1. `RuleCMSWidgetProvider`
+
+This is a context provider that must wrap your entire app (or the section where you use RuleCMS widgets):
+
+```jsx
+<RuleCMSWidgetProvider token={appToken} endpoint={endpoint}>
+  {/* Your app content */}
+</RuleCMSWidgetProvider>
+```
+
+**Props:**
+- `token` (required): Your app token from RuleCMS project settings
+- `endpoint` (optional): API endpoint URL (defaults to https://rulecms.com)
+
+#### 2. `RuleCMSWidget`
+
+This component renders your actual widget:
+
+```jsx
+<RuleCMSWidget publishedKey="your-widget-published-key" />
+```
+
+**Props:**
+- `publishedKey` (required): The unique key generated when you publish a widget
+
+### Multiple Widgets
+
+You can render multiple widgets in the same app:
+
+```jsx
+<RuleCMSWidgetProvider token={appToken}>
+  <div className="app">
+    <header>
+      <RuleCMSWidget publishedKey="header-widget-key" />
+    </header>
+
+    <main>
+      <RuleCMSWidget publishedKey="main-content-widget-key" />
+    </main>
+
+    <footer>
+      <RuleCMSWidget publishedKey="footer-widget-key" />
+    </footer>
+  </div>
+</RuleCMSWidgetProvider>
+```
+
+## Next.js Rendering Methods
+
+This demo showcases **Client-Side Rendering (CSR)** as the simplest approach. Future versions will include:
+
+### Coming Soon:
+- 🔄 **Server-Side Rendering (SSR)** - Dynamic rendering on each request
+- ⚡ **Static Site Generation (SSG)** - Pre-rendered at build time
+- 🌊 **Incremental Static Regeneration (ISR)** - Static with periodic updates
+
+Each rendering method will have its own example in separate directories within this project.
+
+## Environment Variables Reference
+
+For this demo project, create a `.env.local` file:
+
+```env
+# Your RuleCMS App Token (required)
+NEXT_PUBLIC_RULECMS_TOKEN=your_app_token_here
+
+# RuleCMS API Endpoint (optional)
+# Defaults to https://rulecms.com if not provided
+NEXT_PUBLIC_RULECMS_ENDPOINT=https://rulecms.com
+
+# Your widget's published key
+NEXT_PUBLIC_PUBLISHED_KEY=your_published_key_here
+```
+
+**Security Note**: Never commit actual app tokens to version control. Always use environment variables.
+
+## What You Can Build with RuleCMS Widgets
+
+RuleCMS widgets can contain any combination of:
+
+- 📝 **Rich Text Content** - Formatted text, headings, paragraphs
+- 🖼️ **Images & Media** - Photos, videos, galleries
+- 🔘 **Interactive Elements** - Buttons, forms, links
+- 📋 **Data Collections** - Lists, tables, cards
+- 🎨 **Custom Styling** - Colors, fonts, layouts
+- 📱 **Responsive Design** - Automatic mobile optimization
+- ⚡ **Dynamic Content** - Real-time updates and interactions
+
+## Features This Demo Shows
+
+- ✅ **Easy Package Installation** - Simple npm install process
+- ✅ **Environment Configuration** - Secure token management with Next.js
+- ✅ **Provider Setup** - Proper context configuration for app router
+- ✅ **Client Component Architecture** - Optimal Next.js 13+ patterns
+- ✅ **Widget Rendering** - Display published widgets
+- ✅ **Error Handling** - Graceful handling of missing credentials
+- ✅ **Responsive Design** - Works on all device sizes
+- ✅ **Professional UI** - Clean, modern interface
+- ✅ **TypeScript Support** - Full type safety
+
+## Next.js Specific Features
+
+This integration is optimized for Next.js 13+ with:
+
+- 🏗️ **App Router** - Latest Next.js routing system
+- 🔧 **Client Components** - Proper 'use client' boundaries
+- ⚡ **Fast Refresh** - Instant updates during development
+- 📦 **Bundle Optimization** - Efficient code splitting
+- 🎯 **Environment Variables** - NEXT_PUBLIC_ prefix support
+- 🔍 **SEO Ready** - Proper metadata and OpenGraph tags
+
+## Framework Compatibility
+
+This integration method works with all popular React frameworks:
+
+| Framework | Package Version | Environment Variable Prefix | This Demo |
+|-----------|----------------|------------------------------|-----------|
+| **Next.js** | `@rulecms/widget-react@1.0.6` | `NEXT_PUBLIC_` | ✅ **Current** |
+| **Create React App** | `@rulecms/widget-react@1.0.6` | `REACT_APP_` | [Separate Demo](../use_rulecms_create_react_app) |
+| **Vite** | `@rulecms/widget-react@1.0.6` | `VITE_` | 🔄 Coming Soon |
+| **Remix** | `@rulecms/widget-react@1.0.6` | No prefix needed | 🔄 Coming Soon |
+
+## Troubleshooting
+
+### Common Issues
+
+**1. "Module not found" errors**
+```bash
+# Try installing with legacy peer deps
+npm install @rulecms/widget-react --legacy-peer-deps
+```
+
+**2. Widget not displaying**
+- Verify your published key is correct
+- Check that your app token has proper permissions
+- Ensure the RuleCMSWidgetProvider wraps your widget components
+- Check browser console for error messages
+
+**3. Environment variables not loading**
+- Ensure proper prefix for Next.js (`NEXT_PUBLIC_`)
+- Restart your development server after adding environment variables
+- Check that .env.local file is in the project root
+- Verify no typos in variable names
+
+**4. Hydration errors**
+- Ensure RuleCMS components are marked with 'use client'
+- Check for mismatched HTML between server and client
+- Consider using dynamic imports for complex widgets
+
+## Available Scripts
+
+In this demo project directory, you can run:
+
+### `npm run dev`
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000) with Turbopack for faster builds
+
+### `npm run build`
+Builds the app for production to the `.next` folder
+
+### `npm start`
+Runs the production build
+
+### `npm run lint`
+Runs the linter to check code quality
+
+## Demo Project Structure
+
+```
+use_rulecms_nextjs/
+├── public/                    # Static assets
+├── src/
+│   └── app/
+│       ├── components/
+│       │   └── RuleCMSWidget.tsx  # Widget component
+│       ├── globals.css        # Global styles with RuleCMS demo CSS
+│       ├── layout.tsx         # Root layout with provider
+│       ├── page.tsx           # Main demo page
+│       └── providers.tsx      # RuleCMS provider wrapper
+├── .env.example              # Environment variables template
+├── .env.local               # Local environment (not committed)
+├── next.config.ts           # Next.js configuration
+├── package.json             # Dependencies including @rulecms/widget-react
+├── tailwind.config.ts       # Tailwind CSS configuration
+├── tsconfig.json            # TypeScript configuration
+└── README.md                # This comprehensive guide
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- 🌐 **RuleCMS Platform**: [rulecms.com](https://rulecms.com)
+- 📦 **NPM Package**: [@rulecms/widget-react](https://www.npmjs.com/package/@rulecms/widget-react)
+- 📚 **Next.js Documentation**: [nextjs.org/docs](https://nextjs.org/docs)
+- ⚛️ **React Documentation**: [react.dev](https://react.dev)
+- 💬 **Community Support**: [Coming Soon]
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Get Started Today
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Sign up** at [rulecms.com](https://rulecms.com)
+2. **Create your first widget** using the visual composer
+3. **Publish** and get your keys
+4. **Follow this guide** to integrate into your Next.js app
+
+**Built with ❤️ by the RuleCMS team**
+
+*Transform your Next.js applications with powerful, visual content management. No backend required!*
