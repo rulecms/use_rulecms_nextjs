@@ -4,9 +4,9 @@ A comprehensive demonstration showing how to integrate **RuleCMS widgets** into 
 
 ## 🚀 Live Demo
 
-**[View the live demo](#)** *(Deployment URL will be added after hosting)*
+**[View the live demo](https://use-rulecms-nextjs.vercel.app/)** 
 
-Experience the RuleCMS widget integration in action with this deployed Next.js example.
+Experience the RuleCMS widget integration in action with this deployed Next.js example! See all four rendering methods (CSR, SSR, SSG, ISR) working with RuleCMS widgets.
 
 ## 🔗 Quick Links - Try All Rendering Methods
 
