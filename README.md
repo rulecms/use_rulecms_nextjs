@@ -8,6 +8,39 @@ A comprehensive demonstration showing how to integrate **RuleCMS widgets** into 
 
 Experience the RuleCMS widget integration in action with this deployed Next.js example.
 
+## 🔗 Quick Links - Try All Rendering Methods
+
+**Start the development server (`npm run dev`) and visit these routes:**
+
+| 🎯 Method | 🌐 Route | 📝 Description | 🔧 Implementation |
+|-----------|----------|-----------------|-------------------|
+| **[CSR](http://localhost:3000)** | `/` | Client-Side Rendering | `'use client'` components |
+| **[SSR](http://localhost:3000/ssr)** | `/ssr` | Server-Side Rendering | `dynamic = 'force-dynamic'` |
+| **[SSG](http://localhost:3000/ssg)** | `/ssg` | Static Site Generation | `dynamic = 'force-static'` |
+| **[ISR](http://localhost:3000/isr)** | `/isr` | Incremental Static Regeneration | `revalidate = 30` |
+
+> 💡 **Navigate between examples**: Each page includes a beautiful navigation component to switch between all rendering methods!
+
+## ⚡ Quick Start
+
+```bash
+# Clone and run immediately
+git clone <repository-url>
+cd use_rulecms_nextjs
+npm install
+npm run dev
+
+# Visit http://localhost:3000 and click through all the examples!
+```
+
+### 🎨 Explore the Examples
+
+Once running, use the **interactive navigation** on each page to switch between:
+- **CSR** - See client-side rendering in action  
+- **SSR** - Watch server data change on each refresh
+- **SSG** - Experience lightning-fast static pages
+- **ISR** - Observe automatic regeneration every 30 seconds
+
 ## What is RuleCMS?
 
 **RuleCMS** is a powerful visual content management system that lets you:
@@ -274,14 +307,15 @@ You can render multiple widgets in the same app:
 
 ## Next.js Rendering Methods
 
-This demo showcases **Client-Side Rendering (CSR)** as the simplest approach. Future versions will include:
+This demo showcases **all four major Next.js rendering methods** with dedicated routes and examples:
 
-### Coming Soon:
-- 🔄 **Server-Side Rendering (SSR)** - Dynamic rendering on each request
-- ⚡ **Static Site Generation (SSG)** - Pre-rendered at build time
-- 🌊 **Incremental Static Regeneration (ISR)** - Static with periodic updates
+### ✅ Available Examples:
+- 🖥️ **[Client-Side Rendering (CSR)](http://localhost:3000)** - `/` - Default Next.js client-side rendering
+- 🔄 **[Server-Side Rendering (SSR)](http://localhost:3000/ssr)** - `/ssr` - Dynamic rendering on each request  
+- ⚡ **[Static Site Generation (SSG)](http://localhost:3000/ssg)** - `/ssg` - Pre-rendered at build time
+- 🌊 **[Incremental Static Regeneration (ISR)](http://localhost:3000/isr)** - `/isr` - Static with periodic updates (30s)
 
-Each rendering method will have its own example in separate directories within this project.
+Each rendering method demonstrates the same RuleCMS widget integration with method-specific optimizations and explanations.
 
 ## Environment Variables Reference
 
@@ -347,6 +381,137 @@ This integration method works with all popular React frameworks:
 | **Vite** | `@rulecms/widget-react@1.0.6` | `VITE_` | 🔄 Coming Soon |
 | **Remix** | `@rulecms/widget-react@1.0.6` | No prefix needed | 🔄 Coming Soon |
 
+## Next.js Rendering Methods Deep Dive
+
+This application includes comprehensive examples of all four Next.js rendering strategies:
+
+### 🖥️ Client-Side Rendering (CSR) - Route: `/`
+
+**How it works:**
+- Component marked with `'use client'`
+- Renders in the browser after JavaScript loads
+- Widget data fetched on the client-side
+
+**When to use:**
+- Interactive dashboards and admin panels
+- User-specific content that changes frequently
+- When SEO is not a primary concern
+
+**Code example:**
+```jsx
+'use client';
+import { RuleCMSWidget } from '@rulecms/widget-react';
+
+export function ClientWidget() {
+  return <RuleCMSWidget publishedKey="your-key" />;
+}
+```
+
+### 🔄 Server-Side Rendering (SSR) - Route: `/ssr`
+
+**How it works:**
+- Uses `export const dynamic = 'force-dynamic'`
+- Renders on server for each request
+- Fresh data on every page load
+
+**When to use:**
+- Personalized content
+- Real-time data that changes frequently
+- When you need fresh data on every request
+
+**Code example:**
+```jsx
+export const dynamic = 'force-dynamic';
+
+export default async function SSRPage() {
+  const data = await getServerData();
+  return (
+    <div>
+      <RuleCMSWidget publishedKey="your-key" />
+      <p>Server data: {data.timestamp}</p>
+    </div>
+  );
+}
+```
+
+### ⚡ Static Site Generation (SSG) - Route: `/ssg`
+
+**How it works:**
+- Uses `export const dynamic = 'force-static'`
+- Pre-rendered at build time
+- Served as static HTML
+
+**When to use:**
+- Content that doesn't change often
+- Marketing pages, blogs, documentation
+- Maximum performance requirements
+
+**Code example:**
+```jsx
+export const dynamic = 'force-static';
+
+export default async function SSGPage() {
+  const buildData = await getBuildTimeData();
+  return (
+    <div>
+      <RuleCMSWidget publishedKey="your-key" />
+      <p>Built at: {buildData.timestamp}</p>
+    </div>
+  );
+}
+```
+
+### 🌊 Incremental Static Regeneration (ISR) - Route: `/isr`
+
+**How it works:**
+- Uses `export const revalidate = 30` (30 seconds)
+- Static generation with automatic updates
+- Best of both static and dynamic
+
+**When to use:**
+- E-commerce product pages
+- Content that updates periodically
+- When you need static performance with fresh data
+
+**Code example:**
+```jsx
+export const revalidate = 30; // Revalidate every 30 seconds
+
+export default async function ISRPage() {
+  const freshData = await getUpdatedData();
+  return (
+    <div>
+      <RuleCMSWidget publishedKey="your-key" />
+      <p>Last updated: {freshData.timestamp}</p>
+    </div>
+  );
+}
+```
+
+### Navigation Between Examples
+
+The app includes a beautiful navigation component that lets you switch between all rendering methods to see the differences in real-time. Each example includes:
+
+- 📊 **Real-time data** showing when/how the page was rendered
+- 📝 **Detailed explanations** of the rendering method
+- 🛠️ **Code examples** showing the implementation
+- ✅ **Use case recommendations** for when to use each method
+
+### Build Output Analysis
+
+When you run `npm run build`, you'll see different symbols for each route:
+
+```
+Route (app)                    Size    First Load JS  Revalidate
+┌ ○ /                           0 B         134 kB           (CSR)
+├ ○ /ssg                        0 B         134 kB           (SSG)
+├ ○ /isr                        0 B         134 kB    30s    (ISR)
+└ ƒ  /ssr                        0 B         134 kB           (SSR)
+
+○  (Static)   - Pre-rendered as static content
+ƒ  (Dynamic)  - Server-rendered on demand
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -398,10 +563,18 @@ use_rulecms_nextjs/
 ├── src/
 │   └── app/
 │       ├── components/
-│       │   └── RuleCMSWidget.tsx  # Widget component
-│       ├── globals.css        # Global styles with RuleCMS demo CSS
+│       │   ├── Navigation.tsx     # Route navigation component
+│       │   ├── RuleCMSWidget.tsx  # Client widget component
+│       │   └── RuleCMSWidgetSSR.tsx # Server widget component
+│       ├── isr/
+│       │   └── page.tsx           # ISR example (30s revalidate)
+│       ├── ssg/
+│       │   └── page.tsx           # SSG example (build-time)
+│       ├── ssr/
+│       │   └── page.tsx           # SSR example (per-request)
+│       ├── globals.css        # Global styles + navigation
 │       ├── layout.tsx         # Root layout with provider
-│       ├── page.tsx           # Main demo page
+│       ├── page.tsx           # CSR example (main page)
 │       └── providers.tsx      # RuleCMS provider wrapper
 ├── .env.example              # Environment variables template
 ├── .env.local               # Local environment (not committed)
