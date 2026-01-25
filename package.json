@@ -20,8 +20,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@rulecms/source-components-react": "^1.0.1",
-    "@rulecms/widget-react": "^1.0.9",
+    "@rulecms/source-components-react": "^15.0.0",
+    "@rulecms/widget-react": "^14.1.0",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
