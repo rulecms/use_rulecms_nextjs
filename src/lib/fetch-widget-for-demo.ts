@@ -10,20 +10,27 @@ import {
 
 interface FetchWidgetForDemoOptions {
   revalidateSeconds?: number;
+  /** Skip Next.js fetch cache — use on /prefetched while iterating in composer. */
+  noStore?: boolean;
 }
 
 /** Fetch render-ready widget data on the server or at build time. */
 export async function fetchWidgetForDemo(
   options: FetchWidgetForDemoOptions = {}
 ): Promise<RuleCMSWidgetData> {
-  const { revalidateSeconds } = options;
+  const { revalidateSeconds, noStore } = options;
+
+  let fetchOptions: RequestInit | undefined;
+  if (noStore) {
+    fetchOptions = { cache: 'no-store' };
+  } else if (revalidateSeconds) {
+    fetchOptions = { next: { revalidate: revalidateSeconds } };
+  }
 
   return fetchRuleCMSWidget({
     publishedKey: getPublishedKey(),
     token: getServerToken(),
     endpoint: getRuleCMSEndpoint(),
-    fetchOptions: revalidateSeconds
-      ? { next: { revalidate: revalidateSeconds } }
-      : undefined,
+    fetchOptions,
   });
 }

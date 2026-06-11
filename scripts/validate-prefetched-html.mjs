@@ -9,11 +9,11 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const PORT = process.env.PORT || '3000';
 const BASE_URL = `http://localhost:${PORT}`;
-const PATH = '/prefetched-acceptance';
+const PATHS = ['/prefetched', '/prefetched-acceptance'];
 
-function curlHtml() {
+function curlHtml(path) {
   return new Promise((resolve, reject) => {
-    const proc = spawn('curl', ['-s', `${BASE_URL}${PATH}`], {
+    const proc = spawn('curl', ['-s', `${BASE_URL}${path}`], {
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     let stdout = '';
@@ -38,7 +38,7 @@ function startServer() {
 async function waitForServer(maxAttempts = 30) {
   for (let i = 0; i < maxAttempts; i++) {
     try {
-      const html = await curlHtml();
+      const html = await curlHtml(PATHS[0]);
       if (html.includes('<!DOCTYPE html') || html.includes('<html')) {
         return html;
       }
@@ -47,10 +47,35 @@ async function waitForServer(maxAttempts = 30) {
     }
     await delay(1000);
   }
-  throw new Error(`Server did not become ready at ${BASE_URL}${PATH}`);
+  throw new Error(`Server did not become ready at ${BASE_URL}${PATHS[0]}`);
 }
 
-const imgTags = (html) => html.match(/<img[^>]*>/gi) ?? [];
+function runChecks(html, label) {
+  const tags = html.match(/<img[^>]*>/gi) ?? [];
+  const cloudinaryImg = tags.find((tag) => tag.includes('res.cloudinary.com'));
+
+  console.log(`\n--- ${label} ---`);
+  console.log(`Found ${tags.length} <img> tag(s)`);
+
+  if (cloudinaryImg) {
+    console.log('Cloudinary image in server HTML:');
+    console.log(cloudinaryImg);
+  }
+
+  const checks = [
+    ['res.cloudinary.com URL', html.includes('res.cloudinary.com')],
+    ['srcset attribute', /srcset=/i.test(html)],
+    ['width or aspect reservation', /width="\d+"/.test(html) || /aspect-ratio/i.test(html)],
+    ['<img> tag present', tags.length > 0],
+  ];
+
+  let failed = false;
+  for (const [name, ok] of checks) {
+    console.log(`${ok ? '✓' : '✗'} ${name}`);
+    if (!ok) failed = true;
+  }
+  return !failed;
+}
 
 const server = startServer();
 let html;
@@ -63,28 +88,19 @@ try {
   process.exit(1);
 }
 
-const tags = imgTags(html);
-const cloudinaryImg = tags.find((tag) => tag.includes('res.cloudinary.com'));
+console.log(`Fetched ${BASE_URL}${PATHS[0]} (${html.length} bytes)`);
+const liveOk = runChecks(html, `Live widget ${PATHS[0]}`);
 
-console.log(`Fetched ${BASE_URL}${PATH} (${html.length} bytes)`);
-console.log(`Found ${tags.length} <img> tag(s)`);
-
-if (cloudinaryImg) {
-  console.log('\nCloudinary image in server HTML:');
-  console.log(cloudinaryImg);
-}
-
-const checks = [
-  ['res.cloudinary.com URL', html.includes('res.cloudinary.com')],
-  ['srcset attribute', /srcset=/i.test(html)],
-  ['width or aspect reservation', /width="\d+"/.test(html) || /aspect-ratio/i.test(html)],
-];
-
-let failed = false;
-for (const [label, ok] of checks) {
-  console.log(`${ok ? '✓' : '✗'} ${label}`);
-  if (!ok) failed = true;
+let passed = liveOk;
+if (!liveOk) {
+  console.log('\nLive widget missing <img> — trying fixture route…');
+  const fixtureHtml = await curlHtml(PATHS[1]);
+  console.log(`Fetched ${BASE_URL}${PATHS[1]} (${fixtureHtml.length} bytes)`);
+  passed = runChecks(fixtureHtml, `Fixture ${PATHS[1]}`);
+  if (passed) {
+    console.log('\nNote: publish the demo widget with a CloudinaryAdvancedImage so /prefetched passes live.');
+  }
 }
 
 server.kill('SIGTERM');
-process.exit(failed ? 1 : 0);
+process.exit(passed ? 0 : 1);

@@ -2,14 +2,19 @@
 
 import { ReactNode } from 'react';
 import { RuleCMSWidgetProvider } from '@rulecms/widget-react';
+import {
+  DEFAULT_RULECMS_ENDPOINT,
+  getClientToken,
+  getRuleCMSEndpoint,
+} from '@/lib/rulecms-config';
 
 interface RuleCMSProviderProps {
   children: ReactNode;
 }
 
 export function RuleCMSProvider({ children }: RuleCMSProviderProps) {
-  const appToken = process.env.NEXT_PUBLIC_RULECMS_TOKEN || "lEYWhW85gwxHXj3cyomTsNra6MaXu8Q90aa1Q5zjNNVUdrGko7VYLZtMH5n9FI5E";
-  const endpoint = process.env.NEXT_PUBLIC_RULECMS_ENDPOINT || "https://rulecms.com";
+  const appToken = getClientToken();
+  const endpoint = getRuleCMSEndpoint() || DEFAULT_RULECMS_ENDPOINT;
 
   return (
     <RuleCMSWidgetProvider token={appToken} endpoint={endpoint}>

@@ -21,7 +21,7 @@ export default async function SSRPage() {
   const publishedKey = getPublishedKey();
   const [serverData, widgetData] = await Promise.all([
     getServerData(),
-    fetchWidgetForDemo(),
+    fetchWidgetForDemo({ noStore: true }),
   ]);
 
   return (

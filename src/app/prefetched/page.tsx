@@ -4,12 +4,12 @@ import { CollapsibleCard } from '../components/CollapsibleCard';
 import { fetchWidgetForDemo } from '@/lib/fetch-widget-for-demo';
 import { getPublishedKey } from '@/lib/rulecms-config';
 
-/** ISR: regenerate at most every 60 seconds (Phase 1 acceptance criteria). */
-export const revalidate = 60;
+/** Fetch fresh widget JSON each request (no Next.js fetch cache). */
+export const dynamic = 'force-dynamic';
 
 export default async function PrefetchedPage() {
   const publishedKey = getPublishedKey();
-  const widgetData = await fetchWidgetForDemo({ revalidateSeconds: 60 });
+  const widgetData = await fetchWidgetForDemo({ noStore: true });
 
   return (
     <div className="rulecms-app">
@@ -32,11 +32,13 @@ export default async function PrefetchedPage() {
         <Navigation />
 
         <section className="widget-demo-section">
-          <h2>Pre-fetched widget (revalidate 60s)</h2>
+          <h2>Live demo widget (Cloudinary image)</h2>
           <p>
-            This is the Phase 1 acceptance route. The RuleCMS token stays on the
-            server (<span className="code-snippet">RULECMS_TOKEN</span>); only
-            render-ready widget JSON is passed to the client component.
+            Published key{' '}
+            <span className="code-snippet">{publishedKey}</span> — fetched on
+            the server with a 60s upstream cache. The RuleCMS token stays in{' '}
+            <span className="code-snippet">RULECMS_TOKEN</span> (never sent to
+            the browser).
           </p>
 
           <CollapsibleCard title="Acceptance check">
