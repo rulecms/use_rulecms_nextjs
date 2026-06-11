@@ -11,6 +11,18 @@ const navigationItems = [
     description: 'Default Next.js client-side rendering'
   },
   {
+    href: '/prefetched',
+    label: 'Pre-fetched',
+    title: 'Pre-fetched SSR (Phase 1)',
+    description: 'fetchRuleCMSWidget + live widget'
+  },
+  {
+    href: '/prefetched-acceptance',
+    label: 'Accept',
+    title: 'SSR acceptance fixture',
+    description: 'Deterministic Cloudinary img in HTML'
+  },
+  {
     href: '/ssr',
     label: 'SSR',
     title: 'Server-Side Rendering',
@@ -27,6 +39,12 @@ const navigationItems = [
     label: 'ISR',
     title: 'Incremental Static Regeneration',
     description: 'Static with periodic updates'
+  },
+  {
+    href: '/prefetched-pages-router',
+    label: 'Pages',
+    title: 'Pages Router',
+    description: 'getStaticProps + pre-fetched'
   }
 ];
 
