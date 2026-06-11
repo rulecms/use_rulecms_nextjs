@@ -45,6 +45,12 @@ const navigationItems = [
     label: 'Pages',
     title: 'Pages Router',
     description: 'getStaticProps + pre-fetched'
+  },
+  {
+    href: '/server-component',
+    label: 'RSC',
+    title: 'React Server Component',
+    description: 'RuleCMSWidgetServer — zero widget JS'
   }
 ];
 
