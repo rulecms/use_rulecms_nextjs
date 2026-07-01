@@ -7,6 +7,7 @@ import {
   getClientToken,
   getRuleCMSEndpoint,
 } from '@/lib/rulecms-config';
+import { rulecmsLibraries } from '@/lib/rulecms-libraries';
 
 interface RuleCMSProviderProps {
   children: ReactNode;
@@ -17,7 +18,7 @@ export function RuleCMSProvider({ children }: RuleCMSProviderProps) {
   const endpoint = getRuleCMSEndpoint() || DEFAULT_RULECMS_ENDPOINT;
 
   return (
-    <RuleCMSWidgetProvider token={appToken} endpoint={endpoint}>
+    <RuleCMSWidgetProvider token={appToken} endpoint={endpoint} libraries={rulecmsLibraries}>
       {children}
     </RuleCMSWidgetProvider>
   );

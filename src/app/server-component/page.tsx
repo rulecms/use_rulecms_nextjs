@@ -37,6 +37,7 @@ export default function ServerComponentPage() {
               token={getServerToken()}
               endpoint={getRuleCMSEndpoint()}
               fetchOptions={{ cache: 'no-store' }}
+              libraries={{ default: () => import('@rulecms/source-components-react') }}
               errorFallback={<p>Content is temporarily unavailable.</p>}
             />
           </div>
