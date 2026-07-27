@@ -21,7 +21,7 @@
     "validate:prefetched-html": "node scripts/validate-prefetched-html.mjs"
   },
   "dependencies": {
-    "@rulecms/source-components-react": "^20.2.0",
+    "@rulecms/source-components-react": "^20.3.0",
     "@rulecms/widget-react": "^22.3.0",
     "next": "15.5.9",
     "react": "19.1.0",
