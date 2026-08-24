@@ -101,9 +101,6 @@ Create a `.env.local` file in your project root:
 # Your RuleCMS App Token (required)
 NEXT_PUBLIC_RULECMS_TOKEN=your_app_token_here
 
-# RuleCMS API Endpoint (optional - defaults to https://rulecms.com)
-NEXT_PUBLIC_RULECMS_ENDPOINT=https://rulecms.com
-
 # Your widget's published key
 NEXT_PUBLIC_PUBLISHED_KEY=your_published_key_here
 ```
@@ -124,10 +121,9 @@ interface RuleCMSProviderProps {
 
 export function RuleCMSProvider({ children }: RuleCMSProviderProps) {
   const appToken = process.env.NEXT_PUBLIC_RULECMS_TOKEN;
-  const endpoint = process.env.NEXT_PUBLIC_RULECMS_ENDPOINT || "https://rulecms.com";
 
   return (
-    <RuleCMSWidgetProvider token={appToken} endpoint={endpoint}>
+    <RuleCMSWidgetProvider token={appToken}>
       {children}
     </RuleCMSWidgetProvider>
   );
@@ -263,14 +259,14 @@ The `@rulecms/widget-react` package provides two essential components:
 This is a context provider that must wrap your entire app (or the section where you use RuleCMS widgets):
 
 ```jsx
-<RuleCMSWidgetProvider token={appToken} endpoint={endpoint}>
+<RuleCMSWidgetProvider token={appToken}>
   {/* Your app content */}
 </RuleCMSWidgetProvider>
 ```
 
 **Props:**
 - `token` (required): Your app token from RuleCMS project settings
-- `endpoint` (optional): API endpoint URL (defaults to https://rulecms.com)
+- `endpoint` (optional): leave unset. Published tokens use widget-cache; `dev.` tokens use rulecms.com
 
 #### 2. `RuleCMSWidget`
 
@@ -324,10 +320,6 @@ For this demo project, create a `.env.local` file:
 ```env
 # Your RuleCMS App Token (required)
 NEXT_PUBLIC_RULECMS_TOKEN=your_app_token_here
-
-# RuleCMS API Endpoint (optional)
-# Defaults to https://rulecms.com if not provided
-NEXT_PUBLIC_RULECMS_ENDPOINT=https://rulecms.com
 
 # Your widget's published key
 NEXT_PUBLIC_PUBLISHED_KEY=your_published_key_here

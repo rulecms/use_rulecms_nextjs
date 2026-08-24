@@ -2,11 +2,7 @@ import {
   fetchRuleCMSWidget,
   type RuleCMSWidgetData,
 } from '@rulecms/widget-react/server';
-import {
-  getPublishedKey,
-  getRuleCMSEndpoint,
-  getServerToken,
-} from './rulecms-config';
+import { getPublishedKey, getServerToken } from './rulecms-config';
 
 interface FetchWidgetForDemoOptions {
   revalidateSeconds?: number;
@@ -30,7 +26,6 @@ export async function fetchWidgetForDemo(
   return fetchRuleCMSWidget({
     publishedKey: getPublishedKey(),
     token: getServerToken(),
-    endpoint: getRuleCMSEndpoint(),
     fetchOptions,
   });
 }

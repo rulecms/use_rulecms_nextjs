@@ -1,7 +1,7 @@
 import { RuleCMSWidgetServer } from '@rulecms/widget-react/server';
 import { Navigation } from '../components/Navigation';
 import { CollapsibleCard } from '../components/CollapsibleCard';
-import { getPublishedKey, getServerToken, getRuleCMSEndpoint } from '@/lib/rulecms-config';
+import { getPublishedKey, getServerToken } from '@/lib/rulecms-config';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,7 +35,6 @@ export default function ServerComponentPage() {
             <RuleCMSWidgetServer
               publishedKey={getPublishedKey()}
               token={getServerToken()}
-              endpoint={getRuleCMSEndpoint()}
               fetchOptions={{ cache: 'no-store' }}
               libraries={{ default: () => import('@rulecms/source-components-react') }}
               errorFallback={<p>Content is temporarily unavailable.</p>}

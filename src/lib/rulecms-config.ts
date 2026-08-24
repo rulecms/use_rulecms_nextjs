@@ -9,8 +9,6 @@ export const DEMO_PUBLISHED_KEY =
 export const DEMO_RULECMS_TOKEN =
   'lEYWhW85gwxHXj3cyomTsNra6MaXu8Q90aa1Q5zjNNVUdrGko7VYLZtMH5n9FI5E';
 
-export const DEFAULT_RULECMS_ENDPOINT = 'https://rulecms.com';
-
 export function getPublishedKey(): string {
   return (
     process.env.RULECMS_PUBLISHED_KEY ||
@@ -27,12 +25,4 @@ export function getServerToken(): string {
 /** Client-fetch token (CSR). Prefer server pre-fetched mode in production. */
 export function getClientToken(): string {
   return process.env.NEXT_PUBLIC_RULECMS_TOKEN || DEMO_RULECMS_TOKEN;
-}
-
-export function getRuleCMSEndpoint(): string {
-  return (
-    process.env.RULECMS_ENDPOINT ||
-    process.env.NEXT_PUBLIC_RULECMS_ENDPOINT ||
-    DEFAULT_RULECMS_ENDPOINT
-  );
 }
