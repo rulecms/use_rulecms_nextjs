@@ -1,6 +1,6 @@
-import { RuleCMSWidgetComponent } from "./components/RuleCMSWidget";
-import { Navigation } from "./components/Navigation";
-import { CollapsibleCard } from "./components/CollapsibleCard";
+import { RuleCMSWidgetComponent } from "../components/RuleCMSWidget";
+import { Navigation } from "../components/Navigation";
+import { CollapsibleCard } from "../components/CollapsibleCard";
 
 export default function Home() {
   return (

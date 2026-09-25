@@ -1,6 +1,6 @@
-import { RuleCMSWidgetPreFetched } from '../components/RuleCMSWidgetPreFetched';
-import { Navigation } from '../components/Navigation';
-import { CollapsibleCard } from '../components/CollapsibleCard';
+import { RuleCMSWidgetPreFetched } from '../../components/RuleCMSWidgetPreFetched';
+import { Navigation } from '../../components/Navigation';
+import { CollapsibleCard } from '../../components/CollapsibleCard';
 import { fetchWidgetForDemo } from '@/lib/fetch-widget-for-demo';
 import { getPublishedKey } from '@/lib/rulecms-config';
 

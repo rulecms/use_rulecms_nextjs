@@ -1,6 +1,6 @@
-import { RuleCMSWidgetPreFetched } from '../components/RuleCMSWidgetPreFetched';
-import { Navigation } from '../components/Navigation';
-import { CollapsibleCard } from '../components/CollapsibleCard';
+import { RuleCMSWidgetPreFetched } from '../../components/RuleCMSWidgetPreFetched';
+import { Navigation } from '../../components/Navigation';
+import { CollapsibleCard } from '../../components/CollapsibleCard';
 import { acceptanceCloudinaryWidgetData } from '@/fixtures/acceptance-cloudinary-widget-data';
 import { getPublishedKey } from '@/lib/rulecms-config';
 
